@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import tc.oc.pgm.action.actions.ActionNode;
 import tc.oc.pgm.action.actions.DropFlagAction;
 import tc.oc.pgm.action.actions.EnchantItemAction;
+import tc.oc.pgm.action.actions.ExecuteAction;
 import tc.oc.pgm.action.actions.ExposedAction;
 import tc.oc.pgm.action.actions.FillAction;
 import tc.oc.pgm.action.actions.KillEntitiesAction;
@@ -514,4 +516,23 @@ public class ActionParser {
     return new PickupFlagAction(
         parser.reference(FlagDefinition.class, el, "flag").required());
   }
+
+  // CMP START
+  @MethodParser("execute")
+  public ExecuteAction parseExecute(Element el, Class<?> scope) throws InvalidXMLException {
+    Node textNode = Node.fromChildOrAttr(el, "command");
+    if (textNode == null) {
+      throw new InvalidXMLException("A 'command' attribute is required", el);
+    }
+
+    Component comp = XMLUtils.parseFormattedText(textNode);
+    String cmd = comp == null ? "" : PlainTextComponentSerializer.plainText().serialize(comp);
+
+    if (cmd.isEmpty()) {
+      throw new InvalidXMLException("Command text cannot be empty", el);
+    }
+
+    return new ExecuteAction(cmd);
+  }
+  // CMP END
 }

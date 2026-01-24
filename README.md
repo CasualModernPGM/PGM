@@ -1,4 +1,27 @@
-PGM [![Build](https://github.com/PGMDev/PGM/actions/workflows/build.yml/badge.svg?branch=dev)](https://github.com/PGMDev/PGM/actions/workflows/build.yml) [![Crowdin](https://badges.crowdin.net/pgm/localized.svg)](https://crowdin.com/project/pgm) [![Discord](https://img.shields.io/discord/730855489767997511?color=blue&label=discord&logo=discord)](https://discord.gg/pEEcwTk)
+PGM (CMP fork)
+===
+Currently, this fork just adds a fun action for our private server - an `execute` action to use any command we want.
+
+For example:
+```xml
+<actions>
+    <action scope="player">
+        <!-- Set a player's armor to red with a gold trim -->
+        <execute command="item replace entity {player} armor.chest with leather_chestplate[dyed_color=11141120,trim={material:'minecraft:gold',pattern:'minecraft:snout'},unbreakable={}]"/>
+    </actions>
+    
+    <action scope="match">
+        <!-- Summon a creeper -->
+        <execute command="summon minecraft:creeper 5 0 10"/>
+    </action>
+</actions>
+```
+
+Note that this will only work on the modern platform (which is the one we're using), as the vanilla `execute` command did not exist in 1.8.
+
+Map example: [Tartarus](https://github.com/CasualModernPGM/ModernMaps/blob/master/maps/tension/tartarus/map.xml)
+
+Original PGM description
 ===
 
 The original PvP Game Manager for Minecraft.
