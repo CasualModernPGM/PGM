@@ -31,7 +31,7 @@ import tc.oc.pgm.tracker.trackers.EntityTracker;
 import tc.oc.pgm.tracker.trackers.FallTracker;
 import tc.oc.pgm.tracker.trackers.FallingBlockTracker;
 import tc.oc.pgm.tracker.trackers.FireTracker;
-import tc.oc.pgm.tracker.trackers.OwnedMobTracker;
+// import tc.oc.pgm.tracker.trackers.OwnedMobTracker;
 import tc.oc.pgm.tracker.trackers.ProjectileTracker;
 import tc.oc.pgm.tracker.trackers.SpleefTracker;
 import tc.oc.pgm.tracker.trackers.TNTTracker;
@@ -82,7 +82,7 @@ public class TrackerMatchModule implements MatchModule {
     match.addListener(new DispenserTracker(this, match), MatchScope.RUNNING);
     match.addListener(new TNTTracker(this, match), MatchScope.RUNNING);
     match.addListener(new SpleefTracker(this), MatchScope.RUNNING);
-    match.addListener(new OwnedMobTracker(this, match), MatchScope.RUNNING);
+    // match.addListener(new OwnedMobTracker(this, match), MatchScope.RUNNING);
     match.addListener(new ProjectileTracker(this, match), MatchScope.RUNNING);
     match.addListener(new CombatLogTracker(this), MatchScope.RUNNING);
     match.addListener(new DeathTracker(this), MatchScope.RUNNING);
