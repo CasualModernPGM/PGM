@@ -161,6 +161,10 @@ public class MatchAnnouncer implements Listener {
   }
 
   private void sendCurrentlyPlaying(Match match) {
+    if (match.getPlayers().isEmpty() && match.getObservers().isEmpty()) {
+      return;
+    }
+
     match.sendMessage(translatable(
         "misc.playing",
         NamedTextColor.DARK_PURPLE,
