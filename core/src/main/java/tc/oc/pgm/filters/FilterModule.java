@@ -1,5 +1,7 @@
 package tc.oc.pgm.filters;
 
+import static tc.oc.pgm.filters.PlatformFilters.PLATFORM_FILTERS;
+
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.logging.Logger;
@@ -95,10 +97,10 @@ public class FilterModule implements MapModule<FilterMatchModule> {
         features.addFeature(null, "sprinting", PlayerMovementFilter.SPRINTING);
         features.addFeature(null, "grounded", GroundedFilter.INSTANCE);
         features.addFeature(null, "flying", FlyingFilter.INSTANCE);
-        // TODO: support fallback feature ids being overriden without being a breaking change
-        // features.addFeature(null, "gliding", PLATFORM_FILTERS.gliding());
-        // features.addFeature(null, "riptiding", PLATFORM_FILTERS.riptiding());
+        features.addFeature(null, "gliding", PLATFORM_FILTERS.gliding());
+        features.addFeature(null, "riptiding", PLATFORM_FILTERS.riptiding());
         features.addFeature(null, "can-fly", CanFlyFilter.INSTANCE);
+        features.addFeature(null, "riding", PLATFORM_FILTERS.riding());
       }
 
       for (Element filtersEl : doc.getRootElement().getChildren("filters")) {

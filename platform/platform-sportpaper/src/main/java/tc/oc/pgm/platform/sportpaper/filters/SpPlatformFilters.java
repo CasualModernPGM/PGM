@@ -20,4 +20,9 @@ public class SpPlatformFilters implements PlatformFilters {
     // Riptiding is not possible in 1.8
     return StaticFilter.DENY;
   }
+
+  @Override
+  public Filter riding() {
+    return StaticFilter.DENY;
+  }
 }

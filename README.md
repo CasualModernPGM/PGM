@@ -13,8 +13,8 @@ Use any command you want. For example:
     </actions>
     
     <action scope="match">
-        <!-- Summon a creeper -->
-        <execute command="summon minecraft:creeper 5 0 10"/>
+        <!-- Summon a creeper with NBT -->
+        <execute command="summon minecraft:creeper 5 0 10 {Invulnerable:1b}"/>
     </action>
 </actions>
 ```
@@ -25,3 +25,9 @@ Map example: [Tartarus](https://github.com/CasualModernPGM/ModernMaps/blob/maste
 
 ## Mob ownership
 Disabled mob ownership when doing things like using/dispensing spawn eggs.
+
+## `riding` filter
+Filter if a player is riding an entity.
+
+## Misc.
+- Avoid sending "Playing \<map> by \<author>" when no players are on
