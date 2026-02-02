@@ -37,14 +37,19 @@ public class MobsMatchModule implements MatchModule, Listener {
   public void checkSpawn(final CreatureSpawnEvent event) {
     // Allow obscure spawn reasons that can only occur if
     // the player has access to certain creative-only items.
-    switch (event.getSpawnReason()) {
+    CreatureSpawnEvent.SpawnReason reason = event.getSpawnReason();
+    switch (reason) {
       case CUSTOM:
-      case DEFAULT: // Caused by /summon
+      case DEFAULT: // Caused by /summon in 1.8
       case SPAWNER:
       case SPAWNER_EGG:
       case DISPENSE_EGG:
       case SILVERFISH_BLOCK:
         return;
+    }
+
+    if ("COMMAND".equalsIgnoreCase(reason.name())) {
+      return; // Caused by /summon in 1.13+
     }
 
     // Always allow armor stands since they are not really mobs.
@@ -55,8 +60,8 @@ public class MobsMatchModule implements MatchModule, Listener {
     if (this.mobsFilter == null) {
       event.setCancelled(true);
     } else {
-      final QueryResponse response = this.mobsFilter.query(
-          new EntitySpawnQuery(event, event.getEntity(), event.getSpawnReason()));
+      final QueryResponse response =
+          this.mobsFilter.query(new EntitySpawnQuery(event, event.getEntity(), reason));
       event.setCancelled(response.isDenied());
     }
   }

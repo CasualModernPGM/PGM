@@ -31,3 +31,4 @@ Filter if a player is riding an entity.
 
 ## Misc.
 - Avoid sending "Playing \<map> by \<author>" when no players are on
+- Allow spawning command-summoned mobs by default (spawn cause is different in 1.13+)
