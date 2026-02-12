@@ -38,7 +38,21 @@ Usage:
 <lock-mounts>on</lock-mounts>
 ```
 
-## Misc.
+## `quake` module
+Makes `Netherite Hoe` items shoot ray projectiles when right-clicked and gives players velocity when left-clicked. A quick hard-coded gamemode module in the style of the old `<ghostsquadron/>` module from ProjectAres. Could see better integration/expansion if it sees use, but right now it was good enough.
+
+Usage:
+
+```xml
+<quake/>
+<kits>
+    <kit id="example-kit">
+        <item material="netherite hoe" name="`rRailgun"/>
+    </kit>
+</kit>
+```
+
+## Other
 - Avoid sending "Playing \<map> by \<author>" when no players are on.
 - Allow spawning command-summoned mobs by default (spawn cause is different in 1.13+).
 - Adds modern event filtering. Currently used to disable underwater forced dismounts when riding entities.

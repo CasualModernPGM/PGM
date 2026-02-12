@@ -13,5 +13,6 @@ public class ModernModuleRegistrar implements Modules.ModuleRegistrar {
     modules.register(
         LockMountsModule.class, LockMountsMatchModule.class, new LockMountsModule.Factory());
     modules.register(WaypointMatchModule.class, WaypointMatchModule::new);
+    modules.register(QuakeModule.class, QuakeMatchModule.class, new QuakeModule.Factory());
   }
 }
