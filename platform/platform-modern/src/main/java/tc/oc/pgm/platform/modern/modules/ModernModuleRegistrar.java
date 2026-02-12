@@ -9,6 +9,7 @@ import tc.oc.pgm.util.platform.Supports;
 public class ModernModuleRegistrar implements Modules.ModuleRegistrar {
   @Override
   public void registerModules(Modules modules) {
+    modules.register(ModernEventFilterMatchModule.class, ModernEventFilterMatchModule::new);
     modules.register(WaypointMatchModule.class, WaypointMatchModule::new);
   }
 }
