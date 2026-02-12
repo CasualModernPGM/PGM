@@ -24,11 +24,21 @@ Note that this will only work on the modern platform (which is the one we're usi
 Map example: [Tartarus](https://github.com/CasualModernPGM/ModernMaps/blob/master/maps/tension/tartarus/map.xml)
 
 ## Mob ownership
-Disabled mob ownership when doing things like using/dispensing spawn eggs.
+Disabled mob ownership when using/dispensing spawn eggs.
 
 ## `riding` filter
 Filter if a player is riding an entity.
 
+## `lock-mounts` module
+Disable the ability to crouch to dismount an entity.
+
+Usage:
+
+```xml
+<lock-mounts>on</lock-mounts>
+```
+
 ## Misc.
-- Avoid sending "Playing \<map> by \<author>" when no players are on
-- Allow spawning command-summoned mobs by default (spawn cause is different in 1.13+)
+- Avoid sending "Playing \<map> by \<author>" when no players are on.
+- Allow spawning command-summoned mobs by default (spawn cause is different in 1.13+).
+- Adds modern event filtering. Currently used to disable underwater forced dismounts when riding entities.

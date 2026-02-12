@@ -10,6 +10,8 @@ public class ModernModuleRegistrar implements Modules.ModuleRegistrar {
   @Override
   public void registerModules(Modules modules) {
     modules.register(ModernEventFilterMatchModule.class, ModernEventFilterMatchModule::new);
+    modules.register(
+        LockMountsModule.class, LockMountsMatchModule.class, new LockMountsModule.Factory());
     modules.register(WaypointMatchModule.class, WaypointMatchModule::new);
   }
 }
