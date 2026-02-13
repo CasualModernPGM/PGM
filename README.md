@@ -9,12 +9,26 @@ Use any command you want. For example:
 <actions>
     <action scope="player">
         <!-- Set a player's armor to red with a gold trim -->
-        <execute command="item replace entity {player} armor.chest with leather_chestplate[dyed_color=11141120,trim={material:'minecraft:gold',pattern:'minecraft:snout'},unbreakable={}]"/>
+        <execute command="item replace entity #player# armor.chest with leather_chestplate[dyed_color=11141120,trim={material:'minecraft:gold',pattern:'minecraft:snout'},unbreakable={}]"/>
     </actions>
     
     <action scope="match">
         <!-- Summon a creeper with NBT -->
         <execute command="summon minecraft:creeper 5 0 10 {Invulnerable:1b}"/>
+    </action>
+</actions>
+```
+
+As of February 13th, 2026, `<replacements/>` are now supported. Also contains two built-in special replacements: `#player#` (for the player triggering the action) and `~ ~ ~` for their coordinates.
+
+```xml
+<actions>
+    <action scope="player">
+        <execute command="say #player#'s x is: {variable}">
+            <replacements>
+                <decimal id="variable" value="player.x"/>
+            </replacements>
+        </execute>
     </action>
 </actions>
 ```
