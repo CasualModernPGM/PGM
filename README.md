@@ -66,6 +66,15 @@ Usage:
 </kit>
 ```
 
+## `silent` attribute for shopkeepers
+```xml
+<shopkeepers silent="true">
+    <shopkeeper name="`5Purple `7Item Shop" shop="purple-item-shop">
+        <point yaw="0" pitch="10">-88.5,13,-103.5</point>
+    </shopkeeper>
+</shopkeepers>
+```
+
 ## Other
 - Avoid sending "Playing \<map> by \<author>" when no players are on.
 - Allow spawning command-summoned mobs by default (spawn cause is different in 1.13+).

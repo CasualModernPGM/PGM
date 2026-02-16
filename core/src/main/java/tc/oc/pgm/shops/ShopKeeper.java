@@ -1,6 +1,7 @@
 package tc.oc.pgm.shops;
 
 import static tc.oc.pgm.util.bukkit.BukkitUtils.colorize;
+import static tc.oc.pgm.util.nms.EntityUtils.ENTITY_UTILS;
 import static tc.oc.pgm.util.nms.NMSHacks.NMS_HACKS;
 
 import org.bukkit.ChatColor;
@@ -22,13 +23,19 @@ public class ShopKeeper {
   private final PointProvider location;
   private final Class<? extends Entity> type;
   private final Shop shop;
+  private final boolean silent;
 
   public ShopKeeper(
-      @Nullable String name, PointProvider location, Class<? extends Entity> type, Shop shop) {
+      @Nullable String name,
+      PointProvider location,
+      Class<? extends Entity> type,
+      Shop shop,
+      boolean silent) {
     this.name = name;
     this.location = location;
     this.type = type;
     this.shop = shop;
+    this.silent = silent;
   }
 
   public Shop getShop() {
@@ -43,6 +50,10 @@ public class ShopKeeper {
     return name == null || name.isEmpty() ? ChatColor.GRAY + getShop().getId() : colorize(name);
   }
 
+  public boolean isSilent() {
+    return silent;
+  }
+
   public void spawn(Match match) {
     if (match == null) throw new IllegalArgumentException("Match can not be null!");
 
@@ -53,9 +64,12 @@ public class ShopKeeper {
     keeper.setCustomName(getName());
     keeper.setCustomNameVisible(true);
     keeper.setMetadata(METADATA_KEY, new FixedMetadataValue(PGM.get(), shop.getId()));
+
     if (keeper instanceof LivingEntity livingEntity) {
       livingEntity.setRemoveWhenFarAway(false);
+      ENTITY_UTILS.setSilent(livingEntity, silent);
     }
+
     NMS_HACKS.freezeEntity(keeper);
   }
 

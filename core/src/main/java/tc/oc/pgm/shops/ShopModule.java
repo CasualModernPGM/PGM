@@ -117,6 +117,8 @@ public class ShopModule implements MapModule<ShopMatchModule> {
             XMLUtils.parseEntityTypeAttribute(shopkeeper, "mob", Villager.class);
         PointProvider location = pointParser.parseSingle(shopkeeper, new PointProviderAttributes());
 
+        boolean silent = XMLUtils.parseBoolean(shopkeeper.getAttribute("silent"), false);
+
         Shop shop = shops.get(shopId);
 
         if (shop == null) {
@@ -124,7 +126,7 @@ public class ShopModule implements MapModule<ShopMatchModule> {
               "No shop with id '" + shopId + "' could be found", shopkeeper);
         }
 
-        keepers.add(new ShopKeeper(name, location, mob, shop));
+        keepers.add(new ShopKeeper(name, location, mob, shop, silent));
       }
 
       return shops.isEmpty() ? null : new ShopModule(shops, keepers);
