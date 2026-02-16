@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import net.kyori.adventure.text.Component;
@@ -42,6 +44,7 @@ import tc.oc.pgm.util.block.BlockVectorSet;
 import tc.oc.pgm.util.block.BlockVectors;
 import tc.oc.pgm.util.material.BlockMaterialData;
 import tc.oc.pgm.util.material.MaterialData;
+import tc.oc.pgm.util.text.TextException;
 import tc.oc.pgm.util.text.TextFormatter;
 import tc.oc.pgm.variables.Variable;
 import tc.oc.pgm.variables.VariablesMatchModule;
@@ -50,6 +53,7 @@ public class MapDevCommand {
 
   // Avoid showing too many values. Messages that are too long kick the client.
   private static final int ARRAY_CAP = 16;
+  private static final Pattern ARRAY_PATTERN = Pattern.compile("(.+)\\[(\\d+)]");
 
   @Command("variables [target] [page]")
   @CommandDescription("Inspect variables for a player")
@@ -99,18 +103,43 @@ public class MapDevCommand {
   }
 
   @Command("variable set <variable> <value> [target]")
-  @CommandDescription("Inspect variables for a player")
+  @CommandDescription("Set a variable for a player")
   @Permission(Permissions.DEBUG)
   @SuppressWarnings({"rawtypes", "unchecked"})
   public void setVariable(
       VariablesMatchModule vmm,
       Audience audience,
-      @Argument("variable") Variable variable,
+      @Argument("variable") String variableArg,
       @Argument("value") double value,
       @Argument("target") @Default(CURRENT) MatchPlayer target) {
-    variable.setValue(target, value);
+
+    Matcher matcher = ARRAY_PATTERN.matcher(variableArg);
+    final String varName = matcher.matches() ? matcher.group(1) : variableArg;
+    final Integer index = matcher.matches() ? Integer.parseInt(matcher.group(2)) : null;
+
+    Variable<?> variable = vmm.getVariables()
+        .filter(e -> e.getKey().equals(varName))
+        .map(Map.Entry::getValue)
+        .findFirst()
+        .orElse(null);
+
+    if (variable == null) {
+      throw TextException.invalidFormat(varName, Variable.class);
+    }
+
+    if (index != null) {
+      if (variable instanceof Variable.Indexed<?> idx) {
+        idx.setValue(target, index, value);
+      } else {
+        throw TextException.exception("Variable " + varName + " is not an array");
+      }
+    } else {
+      variable.setValue(target, value);
+    }
+
     audience.sendMessage(text("Variable ", NamedTextColor.YELLOW)
         .append(text(vmm.getId(variable), NamedTextColor.AQUA))
+        .append(index != null ? text("[" + index + "]", NamedTextColor.AQUA) : text(""))
         .append(text(" set to ", NamedTextColor.YELLOW))
         .append(text(value + "", NamedTextColor.AQUA))
         .append(text(" for ", NamedTextColor.YELLOW))
