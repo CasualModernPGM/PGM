@@ -80,3 +80,4 @@ Usage:
 - Allow spawning command-summoned mobs by default (spawn cause is different in 1.13+).
 - Adds modern event filtering. Currently used to disable underwater forced dismounts when riding entities.
 - Allows setting arrays in `/variable set`. Usage: `/variable set variable[index] 1`
+- Track when a player kills another via an End Crystal explosion

@@ -96,6 +96,14 @@ public class TrackerMatchModule implements MatchModule {
     return blockTracker;
   }
 
+  public void registerDamageResolverEarly(DamageResolver resolver) {
+    Set<DamageResolver> newResolvers = new LinkedHashSet<>();
+    newResolvers.add(resolver);
+    newResolvers.addAll(damageResolvers);
+    damageResolvers.clear();
+    damageResolvers.addAll(newResolvers);
+  }
+
   public DamageInfo resolveDamage(EntityDamageEvent damageEvent) {
     if (damageEvent instanceof EntityDamageByEntityEvent) {
       return resolveDamage((EntityDamageByEntityEvent) damageEvent);
