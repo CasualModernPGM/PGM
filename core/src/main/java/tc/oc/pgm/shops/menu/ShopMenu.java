@@ -202,11 +202,10 @@ public class ShopMenu extends InventoryMenu {
     if (icon.isFree()) {
       // Free item
       price.add(translatable("shop.lore.free", NamedTextColor.GREEN));
-    } else {
+    } else if (icon.isPurchasable()) {
       price = icon.getPayments().stream()
           .map(p -> {
             boolean hasPayment = p.hasPayment(getViewer().getInventory());
-
             Component currencyName = p.getItem() != null
                 ? text(p.getItem().getItemMeta().getDisplayName())
                 : text(getMaterial(p.getCurrency())).color(TextFormatter.convert(p.getColor()));
@@ -233,36 +232,38 @@ public class ShopMenu extends InventoryMenu {
           .collect(Collectors.toList());
     }
 
-    TextComponent.Builder cost = text()
-        .append(translatable("shop.lore.cost", NamedTextColor.GRAY))
-        .append(text(": ", NamedTextColor.DARK_GRAY));
-
-    // Display free or single item price on the same line as cost
-    if (price.size() == 1) {
-      cost.append(price.getFirst());
-    }
-
-    Component click =
-        translatable("shop.lore." + (canPurchase ? "purchase" : "insufficient"), purchaseColor);
-
-    String costLore = TextTranslations.translateLegacy(cost.build(), getBukkit());
-    String clickLore = TextTranslations.translateLegacy(click, getBukkit());
-
     ItemStack item = icon.getItem().clone();
     ItemModifier.apply(item, getViewer());
     ItemMeta meta = item.getItemMeta();
     List<String> lore = Lists.newArrayList();
-    if (meta.getLore() != null) {
-      lore.addAll(meta.getLore());
-    }
-    lore.add(costLore);
-    // Display payment requirements on different lines
-    if (price.size() > 1) {
-      for (Component line : price) {
-        lore.add(TextTranslations.translateLegacy(line, getBukkit()));
+    if (meta.getLore() != null) lore.addAll(meta.getLore());
+
+    if (icon.isPurchasable()) {
+      TextComponent.Builder cost = text()
+          .append(translatable("shop.lore.cost", NamedTextColor.GRAY))
+          .append(text(": ", NamedTextColor.DARK_GRAY));
+
+      // Display free or single item price on the same line as cost
+      if (price.size() == 1) {
+        cost.append(price.getFirst());
       }
+      lore.add(TextTranslations.translateLegacy(cost.build(), getBukkit()));
+
+      // Display payment requirements on different lines
+      if (price.size() > 1) {
+        for (Component line : price) {
+          lore.add(TextTranslations.translateLegacy(line, getBukkit()));
+        }
+      }
+
+      Component click =
+          translatable("shop.lore." + (canPurchase ? "purchase" : "insufficient"), purchaseColor);
+      lore.add(TextTranslations.translateLegacy(click, getBukkit()));
+    } else if (icon.getClickAction() != null) {
+      lore.add(TextTranslations.translateLegacy(
+          translatable("shop.lore.select", NamedTextColor.YELLOW), getBukkit()));
     }
-    lore.add(clickLore);
+
     meta.setLore(lore);
     meta.addItemFlags(ItemFlag.values());
     item.setItemMeta(meta);

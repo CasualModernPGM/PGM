@@ -13,15 +13,25 @@ public class Icon implements Payable {
   private final ItemStack item;
   private final Filter filter;
   private final Action<? super MatchPlayer> action;
+  private final boolean purchasable;
+  private final Action<? super MatchPlayer> clickAction;
 
   public Icon(
-      List<Payment> payments, ItemStack item, Filter filter, Action<? super MatchPlayer> action) {
+      List<Payment> payments,
+      ItemStack item,
+      Filter filter,
+      Action<? super MatchPlayer> action,
+      boolean purchasable,
+      Action<? super MatchPlayer> clickAction) {
     this.payments = ImmutableList.copyOf(payments);
     this.item = item;
     this.filter = filter;
     this.action = action;
+    this.purchasable = purchasable;
+    this.clickAction = clickAction;
   }
 
+  @Override
   public List<Payment> getPayments() {
     return payments;
   }
@@ -36,5 +46,13 @@ public class Icon implements Payable {
 
   public Action<? super MatchPlayer> getAction() {
     return action;
+  }
+
+  public boolean isPurchasable() {
+    return purchasable;
+  }
+
+  public Action<? super MatchPlayer> getClickAction() {
+    return clickAction;
   }
 }

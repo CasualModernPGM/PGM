@@ -159,13 +159,18 @@ public class ShopModule implements MapModule<ShopMatchModule> {
     ItemStack item = parser.item(icon).required();
     Filter filter = parser.filter(icon, "filter").orAllow();
 
+    boolean purchasable = parser.parseBool(icon, "purchasable").optional(true);
+
     Action<? super MatchPlayer> action = parser
         .action(MatchPlayer.class, icon, "action", "kit")
         .optional(() -> KitNode.of(
             new ItemKit(null, Collections.singletonList(item), false, false, false, true),
             new OverflowWarningKit(translatable("shop.purchase.overflow"))));
 
-    return new Icon(payments, item, filter, action);
+    Action<? super MatchPlayer> clickAction =
+        parser.action(MatchPlayer.class, icon, "click-action").optional(() -> null);
+
+    return new Icon(payments, item, filter, action, purchasable, clickAction);
   }
 
   public static List<Payment> parsePayments(Element parent, XMLFluentParser parser)

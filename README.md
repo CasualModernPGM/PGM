@@ -75,6 +75,44 @@ Usage:
 </shopkeepers>
 ```
 
+## `purchaseable` and `click-action` attributes for shop items
+
+`purchaseable="false"` allows you to make unpurchaseable items in shops.
+`click-action="<action>"` allows you to execute an action when you click an item in a shop.
+
+```xml
+<shops>
+    <shop id="main-menu">
+        <category id="main" name="Main" material="knowledge book">
+            <!-- Unpurchaseable item -->
+            <item material="stone" name="`rUnpurchaseable Item" amount="1" purchasable="false"/>
+            <!-- Buy item and trigger action (show message) -->
+            <item material="cobblestone" name="test" amount="1" price="0" click-action="sample-text"/>
+            <!-- Trigger action (show some text) with no item -->
+            <item material="dirt" name="`rShow some text" amount="1" purchasable="false" click-action="sample-text"/>
+            <!-- Open another shop -->
+            <item material="chest" name="`rAnother menu" amount="1" purchasable="false" click-action="open-another-menu"/>
+        </category>
+    </shop>
+    <shop id="another-menu">
+        <category id="another-menu" name="Another menu" material="knowledge book">
+            <item material="diamond" amount="1" price="0"/>
+        </category>
+    </shop>
+</shops>
+<actions>
+    <action id="sample-text" scope="player">
+      <message text="Sample text!"/>
+    </action>
+    <action id="open-another-menu" scope="player">
+      <open-shop shop="another-menu"/>
+    </action>
+</actions>
+```
+
+This allows you to essentially have menus.
+You can combine multiple menus or shops by selling an item with an `open-shop` click-action!
+
 ## Other
 - Avoid sending "Playing \<map> by \<author>" when no players are on.
 - Allow spawning command-summoned mobs by default (spawn cause is different in 1.13+).
