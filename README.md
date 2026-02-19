@@ -102,10 +102,10 @@ Usage:
 </shops>
 <actions>
     <action id="sample-text" scope="player">
-      <message text="Sample text!"/>
+        <message text="Sample text!"/>
     </action>
     <action id="open-another-menu" scope="player">
-      <open-shop shop="another-menu"/>
+        <open-shop shop="another-menu"/>
     </action>
 </actions>
 ```

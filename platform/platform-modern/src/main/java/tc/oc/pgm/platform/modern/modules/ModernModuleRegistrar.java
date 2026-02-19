@@ -3,6 +3,10 @@ package tc.oc.pgm.platform.modern.modules;
 import static tc.oc.pgm.util.platform.Supports.Variant.PAPER;
 
 import tc.oc.pgm.api.Modules;
+import tc.oc.pgm.platform.modern.modules.cmp.LockMountsMatchModule;
+import tc.oc.pgm.platform.modern.modules.cmp.LockMountsModule;
+import tc.oc.pgm.platform.modern.modules.cmp.QuakeMatchModule;
+import tc.oc.pgm.platform.modern.modules.cmp.QuakeModule;
 import tc.oc.pgm.platform.modern.modules.trim.TrimMatchModule;
 import tc.oc.pgm.platform.modern.modules.trim.TrimModule;
 import tc.oc.pgm.platform.modern.modules.waypoint.WaypointMatchModule;

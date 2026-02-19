@@ -31,7 +31,10 @@ public enum Gamemode implements ComponentLike {
   RAGE("rage", "Rage", "Rage"),
   SCOREBOX("scorebox", "Scorebox", "Scorebox"),
   SKYWARS("skywars", "Skywars", "Skywars"),
-  SURVIVAL_GAMES("sg", "Survival Games", "SG");
+  SURVIVAL_GAMES("sg", "Survival Games", "SG"),
+  TENSION("tension", "Tension", "Tension"),
+  QUAKE("quake", "Quake", "QK"),
+  CRYSTAL("crystal", "Crystal", "Crystal");
 
   private final String id;
 

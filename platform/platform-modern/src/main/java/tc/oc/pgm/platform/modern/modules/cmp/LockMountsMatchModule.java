@@ -1,4 +1,4 @@
-package tc.oc.pgm.platform.modern.modules;
+package tc.oc.pgm.platform.modern.modules.cmp;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,6 +9,7 @@ import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.match.MatchModule;
 import tc.oc.pgm.api.player.MatchPlayer;
 
+@ListenerScope(MatchScope.RUNNING)
 public class LockMountsMatchModule implements MatchModule, Listener {
 
   private final Match match;

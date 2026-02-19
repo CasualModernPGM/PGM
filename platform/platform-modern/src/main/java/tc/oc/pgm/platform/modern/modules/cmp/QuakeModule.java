@@ -1,4 +1,4 @@
-package tc.oc.pgm.platform.modern.modules;
+package tc.oc.pgm.platform.modern.modules.cmp;
 
 import java.util.logging.Logger;
 import org.jdom2.Document;
