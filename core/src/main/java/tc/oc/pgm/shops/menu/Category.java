@@ -37,10 +37,9 @@ public class Category {
   }
 
   public ImmutableList<Icon> getVisibleIcons(MatchPlayer player) {
-    return ImmutableList.copyOf(
-        icons.stream()
-            .filter(icon -> icon.getFilter().query(player).isAllowed())
-            .collect(Collectors.toList()));
+    return ImmutableList.copyOf(icons.stream()
+        .filter(icon -> icon.getFilter().query(player).isAllowed())
+        .collect(Collectors.toList()));
   }
 
   public Filter getFilter() {

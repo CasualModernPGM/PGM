@@ -75,10 +75,13 @@ Usage:
 </shopkeepers>
 ```
 
-## `purchaseable` and `click-action` attributes for shop items
+## `purchaseable`, `click-action` and `on-buy` attributes for shop items
 
-`purchaseable="false"` allows you to make unpurchaseable items in shops.
+`purchaseable="false"` allows you to have unpurchaseable items in shops.
+
 `click-action="<action>"` allows you to execute an action when you click an item in a shop.
+
+`on-buy="close"` allows you to close the shop GUI after buying an item.
 
 ```xml
 <shops>
@@ -92,6 +95,8 @@ Usage:
             <item material="dirt" name="`rShow some text" amount="1" purchasable="false" click-action="sample-text"/>
             <!-- Open another shop -->
             <item material="chest" name="`rAnother menu" amount="1" purchasable="false" click-action="open-another-menu"/>
+            <!--  Buy item, trigger action and close the shop GUI -->
+            <item material="cobblestone" name="test" amount="1" price="0" click-action="sample-text" on-buy="close"/>
         </category>
     </shop>
     <shop id="another-menu">
@@ -110,8 +115,7 @@ Usage:
 </actions>
 ```
 
-This allows you to essentially have menus.
-You can combine multiple menus or shops by selling an item with an `open-shop` click-action!
+This allows you to have GUI menus. You can combine multiple menus or shops by selling an item with an `open-shop` click-action!
 
 ## Other
 - Avoid sending "Playing \<map> by \<author>" when no players are on.

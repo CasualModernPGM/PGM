@@ -20,7 +20,9 @@ import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.match.MatchModule;
+import tc.oc.pgm.api.match.MatchScope;
 import tc.oc.pgm.api.player.MatchPlayer;
+import tc.oc.pgm.events.ListenerScope;
 
 @ListenerScope(MatchScope.RUNNING)
 public class QuakeMatchModule implements MatchModule, Listener {

@@ -39,6 +39,7 @@ import tc.oc.pgm.kits.OverflowWarningKit;
 import tc.oc.pgm.points.PointParser;
 import tc.oc.pgm.points.PointProvider;
 import tc.oc.pgm.points.PointProviderAttributes;
+import tc.oc.pgm.shops.menu.BuyResult;
 import tc.oc.pgm.shops.menu.Category;
 import tc.oc.pgm.shops.menu.Icon;
 import tc.oc.pgm.shops.menu.Payment;
@@ -170,7 +171,10 @@ public class ShopModule implements MapModule<ShopMatchModule> {
     Action<? super MatchPlayer> clickAction =
         parser.action(MatchPlayer.class, icon, "click-action").optional(() -> null);
 
-    return new Icon(payments, item, filter, action, purchasable, clickAction);
+    BuyResult buyResult =
+        parser.parseEnum(BuyResult.class, icon, "on-buy").optional(BuyResult.NOTHING);
+
+    return new Icon(payments, item, filter, action, purchasable, clickAction, buyResult);
   }
 
   public static List<Payment> parsePayments(Element parent, XMLFluentParser parser)
