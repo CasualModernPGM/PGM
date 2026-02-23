@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.jspecify.annotations.Nullable;
+import tc.oc.pgm.api.death.DeathMessageRegistry;
 import tc.oc.pgm.api.player.MatchPlayer;
 import tc.oc.pgm.api.player.ParticipantState;
 import tc.oc.pgm.api.player.event.MatchPlayerDeathEvent;
@@ -72,7 +73,10 @@ public class DeathMessageBuilder {
   private Component mob = space();
   private Long distance;
 
+  private final MatchPlayerDeathEvent originalEvent;
+
   public DeathMessageBuilder(MatchPlayerDeathEvent event, Logger logger) {
+    this.originalEvent = event;
     this.victim = event.getVictim();
     this.killer = event.getDamageInfo().getAttacker();
     this.predicted = event.isPredicted();
@@ -82,10 +86,14 @@ public class DeathMessageBuilder {
   }
 
   public Component getMessage() {
+    Component custom = DeathMessageRegistry.getCustomMessage(originalEvent);
+    if (custom != null) {
+      return custom;
+    }
     Component message = translatable(key, getArgs());
-
-    if (predicted) message = message.append(space()).append(translatable("death.predictedSuffix"));
-
+    if (predicted) {
+      message = message.append(space()).append(translatable("death.predictedSuffix"));
+    }
     return message;
   }
 
