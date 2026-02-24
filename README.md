@@ -3,7 +3,7 @@ PGM (CMP fork)
 This fork's changes for our private server:
  
 ## `execute` action
-Use any command you want. For example:
+Use any command you want. Supports `<replacements/>`.
 
 ```xml
 <actions>
@@ -16,13 +16,7 @@ Use any command you want. For example:
         <!-- Summon a creeper with NBT -->
         <execute command="summon minecraft:creeper 5 0 10 {Invulnerable:1b}"/>
     </action>
-</actions>
-```
 
-As of February 13th, 2026, `<replacements/>` are now supported. Also contains two built-in special replacements: `#player#` (for the player triggering the action) and `~ ~ ~` for their coordinates.
-
-```xml
-<actions>
     <action scope="player">
         <execute command="say #player#'s x is: {variable}">
             <replacements>
@@ -31,6 +25,22 @@ As of February 13th, 2026, `<replacements/>` are now supported. Also contains tw
         </execute>
     </action>
 </actions>
+```
+
+You can disable specific commands in PGM's `config.yml` file:
+
+```yml
+cmp:
+  blocked-commands:
+    - op
+    - deop
+    - stop
+    - reload
+    - ban
+    - ban-ip
+    - pardon
+    - pardon-ip
+    - kick
 ```
 
 Note that this will only work on the modern platform (which is the one we're using), as the vanilla `execute` command did not exist in 1.8.

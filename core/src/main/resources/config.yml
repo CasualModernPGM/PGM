@@ -240,3 +240,15 @@ modern:
   #
   # ENABLE IF AND ONLY IF YOU TRUST ALL LOADED MAPS ON THE SERVER, and are aware of the risks involved.
   allow-command-blocks: false
+
+cmp:
+  blocked-commands:
+    - op
+    - deop
+    - stop
+    - reload
+    - ban
+    - ban-ip
+    - pardon
+    - pardon-ip
+    - kick

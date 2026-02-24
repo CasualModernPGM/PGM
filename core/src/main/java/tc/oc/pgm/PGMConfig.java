@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -129,6 +130,9 @@ public final class PGMConfig implements Config {
 
   // modern.*
   private final boolean commandBlocksEnabled;
+
+  // cmp.*
+  private final List<String> blockedCommands;
 
   PGMConfig(FileConfiguration config, File dataFolder) throws TextException {
     handleLegacyConfig(config, dataFolder);
@@ -246,6 +250,10 @@ public final class PGMConfig implements Config {
     this.experiments = experiments == null ? ImmutableMap.of() : experiments.getValues(false);
 
     commandBlocksEnabled = parseBoolean(config.getString("modern.allow-command-blocks", "false"));
+
+    ConfigurationSection cmpSection = config.getConfigurationSection("cmp");
+    this.blockedCommands =
+        cmpSection != null ? cmpSection.getStringList("blocked-commands") : Collections.emptyList();
   }
 
   private Path getPath(Path base, String dir) {
@@ -707,6 +715,11 @@ public final class PGMConfig implements Config {
   @Override
   public boolean allowCommandBlocks() {
     return commandBlocksEnabled;
+  }
+
+  @Override
+  public List<String> getBlockedCommands() {
+    return blockedCommands;
   }
 
   private static class Group implements Config.Group {

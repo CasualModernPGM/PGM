@@ -2,6 +2,7 @@ package tc.oc.pgm.action.actions;
 
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.logging.Level;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import net.kyori.adventure.audience.Audience;
@@ -13,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import tc.oc.pgm.action.replacements.Replacement;
+import tc.oc.pgm.api.PGM;
 import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.player.MatchPlayer;
 import tc.oc.pgm.filters.Filterable;
@@ -56,8 +58,31 @@ public class ExecuteAction extends AbstractAction<Audience> {
       parsed = parsed.replace("#player#", playerName);
       parsed = parsed.replace("~ ~ ~", coords);
 
-      String prefix = "execute in minecraft:match-" + match.getId() + " run ";
-      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), prefix + parsed);
+      String matchId = match.getId();
+
+      String prefix = "execute in minecraft:match-" + matchId + " run ";
+      String fullCommand = prefix + parsed;
+
+      for (String blocked : PGM.get().getConfiguration().getBlockedCommands()) {
+        Pattern p = Pattern.compile("\\b" + Pattern.quote(blocked.toLowerCase()) + "\\b");
+        if (p.matcher(parsed.toLowerCase()).find()) {
+          PGM.get()
+              .getGameLogger()
+              .log(Level.SEVERE, "Blocked command in match " + matchId + ": " + fullCommand);
+          return;
+        }
+      }
+
+      try {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), fullCommand);
+      } catch (org.bukkit.command.CommandException e) {
+        PGM.get()
+            .getGameLogger()
+            .log(
+                Level.SEVERE,
+                "Failed to execute command in match " + matchId + ": " + fullCommand,
+                e);
+      }
     }
   }
 

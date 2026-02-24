@@ -494,6 +494,8 @@ public interface Config {
     return exp instanceof Boolean ? (Boolean) exp : exp.toString().equals("true");
   }
 
+  List<String> getBlockedCommands();
+
   /**
    * Gets whether command blocks are enabled. Effective only on modern servers.
    *
