@@ -1,6 +1,7 @@
-package tc.oc.pgm.platform.modern.modules.cmp;
+package tc.oc.pgm.platform.modern.modules.cmp.quake;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Color;
@@ -29,6 +30,7 @@ public class QuakeMatchModule implements MatchModule, Listener {
 
   private final Match match;
   private final boolean enabled;
+  private final List<RailgunDefinition> railguns;
 
   private static final double MAX_RANGE = 100.0;
   private static final long COOLDOWN_MS = 1000;
@@ -37,9 +39,10 @@ public class QuakeMatchModule implements MatchModule, Listener {
   private final Map<UUID, Long> shootCooldowns = new HashMap<>();
   private final Map<UUID, Long> boostCooldowns = new HashMap<>();
 
-  public QuakeMatchModule(Match match, boolean enabled) {
+  public QuakeMatchModule(Match match, boolean enabled, List<RailgunDefinition> railguns) {
     this.match = match;
     this.enabled = enabled;
+    this.railguns = railguns;
   }
 
   @EventHandler
@@ -50,8 +53,17 @@ public class QuakeMatchModule implements MatchModule, Listener {
     MatchPlayer shooter = match.getPlayer(player);
     if (shooter == null || !shooter.isParticipating()) return;
 
-    ItemStack item = player.getInventory().getItemInMainHand();
-    if (item == null || item.getType() != Material.NETHERITE_HOE) return;
+    ItemStack heldItem = player.getInventory().getItemInMainHand();
+    if (heldItem == null) return;
+
+    Material gunType = heldItem.getType();
+    RailgunDefinition def =
+        railguns.stream().filter(r -> r.material() == gunType).findFirst().orElse(null);
+
+    if (def == null) return;
+
+    Color beamColor = def.beamColor();
+    Color spiralColor = def.spiralColor();
 
     switch (event.getAction()) {
       case RIGHT_CLICK_AIR:
@@ -61,7 +73,7 @@ public class QuakeMatchModule implements MatchModule, Listener {
         if (nowShoot - lastShoot < COOLDOWN_MS) return;
         shootCooldowns.put(player.getUniqueId(), nowShoot);
 
-        player.setCooldown(Material.NETHERITE_HOE, (int) (COOLDOWN_MS / 50));
+        player.setCooldown(gunType, (int) (COOLDOWN_MS / 50));
         Vector direction = player.getEyeLocation().getDirection();
 
         RayTraceResult entityResult = player
@@ -84,8 +96,8 @@ public class QuakeMatchModule implements MatchModule, Listener {
               blockResult.getHitPosition().distance(player.getEyeLocation().toVector());
         }
 
-        DustOptions blackDust = new DustOptions(Color.BLACK, 1.0F);
-        DustOptions whiteDust = new DustOptions(Color.WHITE, 1.0F);
+        DustOptions mainBeamDust = new DustOptions(beamColor, 1.0F);
+        DustOptions spiralDust = new DustOptions(spiralColor, 1.0F);
 
         for (double d = 0; d < maxDistance; d += 1.0) {
           Vector basePoint =
@@ -103,7 +115,7 @@ public class QuakeMatchModule implements MatchModule, Listener {
                   0,
                   0,
                   0,
-                  blackDust);
+                  mainBeamDust);
 
           double radius = 0.2;
           double angle = d * 0.8;
@@ -133,7 +145,7 @@ public class QuakeMatchModule implements MatchModule, Listener {
                   0,
                   0,
                   0,
-                  whiteDust);
+                  spiralDust);
         }
 
         if (blockResult != null && blockResult.getHitBlock() != null) {

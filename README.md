@@ -53,15 +53,19 @@ Usage:
 ```
 
 ## `quake` module
-Makes `Netherite Hoe` items shoot ray projectiles when right-clicked and gives players velocity when left-clicked. A quick hard-coded gamemode module in the style of the old `<ghostsquadron/>` module from ProjectAres. Could see better integration/expansion if it sees use, but right now it was good enough.
+Allows you to define railgun items that shoot projectiles when right-clicked and gives players velocity when left-clicked. A quick hard-coded gamemode module in the style of the old `<ghostsquadron/>` module from ProjectAres. 
 
 Usage:
 
 ```xml
-<quake/>
+<quake>
+    <railgun material="netherite hoe" beam-color="black" spiral-color="white"/>
+    <railgun material="diamond hoe" beam-color="teal" spiral-color="aqua"/>
+</quake>
 <kits>
     <kit id="example-kit">
-        <item material="netherite hoe" name="`rRailgun"/>
+        <item material="netherite hoe" name="Railgun 1"/>
+        <item material="diamond hoe" name="Railgun 2"/>
     </kit>
 </kit>
 ```
