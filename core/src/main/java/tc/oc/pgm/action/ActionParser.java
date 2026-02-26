@@ -6,7 +6,9 @@ import static net.kyori.adventure.text.Component.empty;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Range;
 import java.lang.reflect.Method;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +34,7 @@ import tc.oc.pgm.action.actions.PasteStructureAction;
 import tc.oc.pgm.action.actions.PickupFlagAction;
 import tc.oc.pgm.action.actions.RepeatAction;
 import tc.oc.pgm.action.actions.ReplaceItemAction;
+import tc.oc.pgm.action.actions.ScheduleAction;
 import tc.oc.pgm.action.actions.ScopeSwitchAction;
 import tc.oc.pgm.action.actions.SetVariableAction;
 import tc.oc.pgm.action.actions.SoundAction;
@@ -516,7 +519,6 @@ public class ActionParser {
         parser.reference(FlagDefinition.class, el, "flag").required());
   }
 
-  // CMP START
   @MethodParser("execute")
   public <T extends Filterable<?>> ExecuteAction parseExecute(Element el, Class<T> scope)
       throws InvalidXMLException {
@@ -545,5 +547,20 @@ public class ActionParser {
 
     return new ExecuteAction(comp, replacementMap);
   }
-  // CMP END
+
+  private static final Range<Duration> WAIT_RANGE =
+      Range.closed(Duration.ZERO, Duration.ofMinutes(1));
+
+  @MethodParser("schedule")
+  @SuppressWarnings("unchecked")
+  public <B extends Filterable<?>> Action<?> parseSchedule(Element el, Class<B> scope)
+      throws InvalidXMLException {
+    scope = parseScope(el, scope);
+    var action = parseAction(el, scope);
+    var after = parser.duration(el, "after").between(WAIT_RANGE).required();
+
+    return MatchPlayer.class.isAssignableFrom(scope)
+        ? new ScheduleAction.Player(after, (Action<? super MatchPlayer>) action)
+        : new ScheduleAction<>(scope, after, action);
+  }
 }
