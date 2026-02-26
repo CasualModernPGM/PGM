@@ -202,4 +202,8 @@ public class QuakeMatchModule implements MatchModule, Listener {
     shootCooldowns.remove(id);
     boostCooldowns.remove(id);
   }
+
+  public List<RailgunDefinition> getRailguns() {
+    return railguns;
+  }
 }
