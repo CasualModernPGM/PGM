@@ -7,6 +7,7 @@ import tc.oc.pgm.platform.modern.modules.cmp.LockMountsMatchModule;
 import tc.oc.pgm.platform.modern.modules.cmp.LockMountsModule;
 import tc.oc.pgm.platform.modern.modules.cmp.quake.QuakeMatchModule;
 import tc.oc.pgm.platform.modern.modules.cmp.quake.QuakeModule;
+import tc.oc.pgm.platform.modern.modules.kits.ModernKitMatchModule;
 import tc.oc.pgm.platform.modern.modules.trim.TrimMatchModule;
 import tc.oc.pgm.platform.modern.modules.trim.TrimModule;
 import tc.oc.pgm.platform.modern.modules.waypoint.WaypointMatchModule;
@@ -23,6 +24,7 @@ public class ModernModuleRegistrar implements Modules.ModuleRegistrar {
     modules.register(WaypointMatchModule.class, WaypointMatchModule::new);
     modules.register(QuakeModule.class, QuakeMatchModule.class, new QuakeModule.Factory());
     modules.register(ModernTrackerMatchModule.class, ModernTrackerMatchModule::new);
+    modules.register(ModernKitMatchModule.class, new ModernKitMatchModule.Factory());
     modules.register(TrimModule.class, TrimMatchModule.class, new TrimModule.Factory());
   }
 }
