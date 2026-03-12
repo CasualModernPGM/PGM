@@ -299,7 +299,7 @@ public class PGMListener implements Listener {
               text(event.getNewPool().getName(), NamedTextColor.AQUA)))
           .build();
 
-      event.getMatch().sendMessage(broadcast);
+      ChatManager.broadcastAdminMessage(broadcast);
     }
   }
 
