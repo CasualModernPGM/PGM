@@ -545,7 +545,9 @@ public class ActionParser {
       replacementMap = builder.build();
     }
 
-    return new ExecuteAction(comp, replacementMap);
+    boolean playerContext = XMLUtils.parseBoolean(Node.fromAttr(el, "player"), false);
+
+    return new ExecuteAction(comp, replacementMap, playerContext);
   }
 
   private static final Range<Duration> WAIT_RANGE =

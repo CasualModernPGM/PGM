@@ -16,6 +16,11 @@ Use any command you want. Supports `<replacements/>`.
         <!-- Summon a creeper with NBT -->
         <execute command="summon minecraft:creeper 5 0 10 {Invulnerable:1b}"/>
     </action>
+    
+    <action scope="player">
+        <!-- Execute a command with a player context (instead of console) -->
+        <execute command="me says hi!" player="true"/>
+    </action>
 
     <action scope="player">
         <execute command="say #player#'s x is: {variable}">

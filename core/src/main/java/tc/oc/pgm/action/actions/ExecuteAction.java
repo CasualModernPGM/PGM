@@ -12,6 +12,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandException;
 import org.bukkit.entity.Player;
 import tc.oc.pgm.action.replacements.Replacement;
 import tc.oc.pgm.api.PGM;
@@ -26,11 +27,14 @@ public class ExecuteAction extends AbstractAction<Audience> {
 
   private final Component command;
   private final Map<String, Replacement> replacements;
+  private final boolean playerContext;
 
-  public ExecuteAction(Component command, Map<String, Replacement> replacements) {
+  public ExecuteAction(
+      Component command, Map<String, Replacement> replacements, boolean playerContext) {
     super(Audience.class);
     this.command = command;
     this.replacements = replacements;
+    this.playerContext = playerContext;
   }
 
   @Override
@@ -39,10 +43,11 @@ public class ExecuteAction extends AbstractAction<Audience> {
     Filterable<?> ctx = null;
     String playerName = "@a";
     String coords = "0 0 0";
+    Player player = null;
 
     if (audience instanceof MatchPlayer) {
       MatchPlayer matchPlayer = (MatchPlayer) audience;
-      Player player = matchPlayer.getBukkit();
+      player = matchPlayer.getBukkit();
       match = matchPlayer.getMatch();
       ctx = matchPlayer;
       playerName = player.getName();
@@ -53,36 +58,39 @@ public class ExecuteAction extends AbstractAction<Audience> {
       ctx = match;
     }
 
-    if (match != null && ctx != null) {
-      String parsed = replace(command, ctx);
-      parsed = parsed.replace("#player#", playerName);
-      parsed = parsed.replace("~ ~ ~", coords);
+    if (match == null || ctx == null) {
+      return;
+    }
 
-      String matchId = match.getId();
+    String parsed = replace(command, ctx);
+    parsed = parsed.replace("#player#", playerName);
+    parsed = parsed.replace("~ ~ ~", coords);
 
-      String prefix = "execute in minecraft:match-" + matchId + " run ";
-      String fullCommand = prefix + parsed;
-
-      for (String blocked : PGM.get().getConfiguration().getBlockedCommands()) {
-        Pattern p = Pattern.compile("\\b" + Pattern.quote(blocked.toLowerCase()) + "\\b");
-        if (p.matcher(parsed.toLowerCase()).find()) {
-          PGM.get()
-              .getGameLogger()
-              .log(Level.SEVERE, "Blocked command in match " + matchId + ": " + fullCommand);
-          return;
-        }
-      }
-
-      try {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), fullCommand);
-      } catch (org.bukkit.command.CommandException e) {
+    for (String blocked : PGM.get().getConfiguration().getBlockedCommands()) {
+      Pattern p = Pattern.compile("\\b" + Pattern.quote(blocked.toLowerCase()) + "\\b");
+      if (p.matcher(parsed.toLowerCase()).find()) {
         PGM.get()
             .getGameLogger()
-            .log(
-                Level.SEVERE,
-                "Failed to execute command in match " + matchId + ": " + fullCommand,
-                e);
+            .log(Level.SEVERE, "Blocked command in match " + match.getId() + ": " + parsed);
+        return;
       }
+    }
+
+    try {
+      if (playerContext && player != null) {
+        Bukkit.dispatchCommand(player, parsed);
+      } else {
+        String prefix = "execute in minecraft:match-" + match.getId() + " run ";
+        String fullCommand = prefix + parsed;
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), fullCommand);
+      }
+    } catch (CommandException e) {
+      PGM.get()
+          .getGameLogger()
+          .log(
+              Level.SEVERE,
+              "Failed to execute command in match " + match.getId() + ": " + parsed,
+              e);
     }
   }
 
