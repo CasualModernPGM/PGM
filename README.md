@@ -131,6 +131,14 @@ Usage:
 
 This allows you to have GUI menus. You can combine multiple menus or shops by selling an item with an `open-shop` click-action!
 
+## New attributes for `players` (FFA)
+
+You can choose to have a single color for your FFA match participants, as well as a custom name (instead of the default "Players")
+
+```xml
+<players color="red">README readers</players>
+```
+
 ## Other
 - Avoid sending "Playing \<map> by \<author>" when no players are on.
 - Allow spawning command-summoned mobs by default (spawn cause is different in 1.13+).

@@ -85,6 +85,8 @@ public class FreeForAllMatchModule implements MatchModule, Listener, JoinHandler
       final List<ChatColor> colors = Lists.newArrayList(COLORS);
       Collections.shuffle(colors);
       colors.forEach(this.colors::push);
+    } else if (options.singleColor != null) {
+      colors.add(options.singleColor);
     } else {
       colors.add(ChatColor.YELLOW);
     }
@@ -159,8 +161,19 @@ public class FreeForAllMatchModule implements MatchModule, Listener, JoinHandler
   protected Tribute getTribute(MatchPlayer player) {
     Tribute tribute = tributes.get(player.getId());
     if (tribute == null) {
-      final ChatColor color = colors.pollFirst();
-      if (color != null) colors.addLast(color);
+      final ChatColor color;
+
+      if (options.singleColor != null) {
+        color = options.singleColor;
+      } else if (options.colors) {
+        color = colors.pollFirst();
+        if (color != null) {
+          colors.addLast(color);
+        }
+      } else {
+        color = ChatColor.YELLOW;
+      }
+
       tribute = new Tribute(player, color);
       tributes.put(player.getId(), tribute);
       match.getLogger().fine("Created " + tribute);

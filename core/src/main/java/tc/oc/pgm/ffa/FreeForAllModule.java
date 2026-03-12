@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -72,23 +73,45 @@ public class FreeForAllModule implements MapModule<FreeForAllMatchModule> {
         int maxOverfill = maxPlayers;
         NameTagVisibility nameTagVisibility = NameTagVisibility.ALWAYS;
         boolean colors = false;
+        ChatColor singleColor = null;
+        String customName = null;
 
         if (elPlayers != null) {
           minPlayers =
               XMLUtils.parseNumber(elPlayers.getAttribute("min"), Integer.class, minPlayers);
           maxPlayers =
               XMLUtils.parseNumber(elPlayers.getAttribute("max"), Integer.class, maxPlayers);
-          maxOverfill =
-              XMLUtils.parseNumber(
-                  elPlayers.getAttribute("max-overfill"), Integer.class, maxOverfill);
-          nameTagVisibility =
-              XMLUtils.parseNameTagVisibility(
-                  Node.fromAttr(elPlayers, "show-name-tags"), nameTagVisibility);
+          maxOverfill = XMLUtils.parseNumber(
+              elPlayers.getAttribute("max-overfill"), Integer.class, maxOverfill);
+          nameTagVisibility = XMLUtils.parseNameTagVisibility(
+              Node.fromAttr(elPlayers, "show-name-tags"), nameTagVisibility);
           colors = XMLUtils.parseBoolean(Node.fromAttr(elPlayers, "colors"), colors);
+
+          String colorAttr = elPlayers.getAttributeValue("color");
+          if (colorAttr != null) {
+            try {
+              singleColor = ChatColor.valueOf(colorAttr.trim().toUpperCase());
+            } catch (IllegalArgumentException e) {
+              throw new InvalidXMLException("Invalid color value: " + colorAttr, elPlayers);
+            }
+          }
+
+          if (colors && singleColor != null)
+            throw new InvalidXMLException(
+                "Cannot combine 'colors' and 'color' attributes", elPlayers);
+
+          String text = elPlayers.getTextNormalize();
+          if (text != null && !text.isEmpty()) customName = text;
         }
 
-        return new FreeForAllModule(
-            new FreeForAllOptions(minPlayers, maxPlayers, maxOverfill, nameTagVisibility, colors));
+        return new FreeForAllModule(new FreeForAllOptions(
+            minPlayers,
+            maxPlayers,
+            maxOverfill,
+            nameTagVisibility,
+            colors,
+            singleColor,
+            customName));
       }
     }
   }
