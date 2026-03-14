@@ -160,3 +160,4 @@ You can choose to have a single color for your FFA match participants, as well a
 - Allows setting arrays in `/variable set`. Usage: `/variable set variable[index] 1`.
 - Track when a player kills another via an End Crystal explosion.
 - `show-match-time` config setting.
+- Show match duration at the end of match stats display.

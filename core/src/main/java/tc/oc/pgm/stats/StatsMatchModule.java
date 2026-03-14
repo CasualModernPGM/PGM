@@ -6,6 +6,7 @@ import static net.kyori.adventure.text.Component.translatable;
 import static net.kyori.adventure.text.Component.virtual;
 import static tc.oc.pgm.util.player.PlayerComponent.player;
 import static tc.oc.pgm.util.text.NumberComponent.number;
+import static tc.oc.pgm.util.text.TemporalComponent.clock;
 import static tc.oc.pgm.util.text.TextFormatter.list;
 
 import com.google.common.collect.Collections2;
@@ -319,6 +320,12 @@ public class StatsMatchModule implements MatchModule, Listener {
           viewer.getBukkit(),
           translatable("match.stats.title", NamedTextColor.YELLOW),
           NamedTextColor.WHITE));
+
+      Duration duration = match.getDuration();
+      Component durationLine = translatable("match.info.time", NamedTextColor.WHITE)
+          .append(text(": ", NamedTextColor.WHITE))
+          .append(clock(duration).color(NamedTextColor.GOLD));
+      viewer.sendMessage(durationLine);
 
       best.forEach(viewer::sendMessage);
       viewer.getInventory().setItem(verboseItemSlot, item.createItem(viewer.getBukkit()));
