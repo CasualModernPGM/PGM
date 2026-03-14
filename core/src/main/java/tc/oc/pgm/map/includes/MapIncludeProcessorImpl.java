@@ -3,7 +3,9 @@ package tc.oc.pgm.map.includes;
 import com.google.common.collect.Maps;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -27,13 +29,11 @@ public class MapIncludeProcessorImpl implements MapIncludeProcessor {
   private final Logger logger;
   private final Map<String, MapInclude> includes;
 
-  protected static final ThreadLocal<SAXBuilder> DOCUMENT_FACTORY =
-      ThreadLocal.withInitial(
-          () -> {
-            final SAXBuilder builder = new SAXBuilder();
-            builder.setSAXHandlerFactory(SAXHandler.FACTORY);
-            return builder;
-          });
+  protected static final ThreadLocal<SAXBuilder> DOCUMENT_FACTORY = ThreadLocal.withInitial(() -> {
+    final SAXBuilder builder = new SAXBuilder();
+    builder.setSAXHandlerFactory(SAXHandler.FACTORY);
+    return builder;
+  });
 
   public MapIncludeProcessorImpl(Logger logger) {
     this.logger = logger;
@@ -72,29 +72,34 @@ public class MapIncludeProcessorImpl implements MapIncludeProcessor {
   @Override
   public void loadNewIncludes() {
     Config config = PGM.get().getConfiguration();
-    if (config.getIncludesDirectory() == null) return;
-
-    File includeFiles = config.getIncludesDirectory().toFile();
-    if (!includeFiles.isDirectory()) {
-      logger.warning(config.getIncludesDirectory() + " is not a directory!");
-      return;
-    }
+    List<Path> includeDirs = config.getIncludeDirectories();
+    if (includeDirs == null || includeDirs.isEmpty()) return;
 
     Set<String> deletedIncludes = new HashSet<>(includes.keySet());
 
-    File[] files = includeFiles.listFiles();
-    for (File file : files) {
-      String filename = file.getName();
-      if (!filename.endsWith(".xml")) continue;
+    for (Path dirPath : includeDirs) {
+      File includeFiles = dirPath.toFile();
+      if (!includeFiles.isDirectory()) {
+        logger.warning(dirPath + " is not a directory!");
+        continue;
+      }
 
-      String id = filename.substring(0, filename.length() - ".xml".length());
-      // Already loaded, can ignore and continue
-      if (deletedIncludes.remove(id)) continue;
+      File[] files = includeFiles.listFiles();
+      if (files == null) continue;
 
-      try {
-        this.includes.put(id, new MapIncludeImpl(id, file));
-      } catch (MapMissingException | JDOMException | IOException error) {
-        logger.log(Level.WARNING, "Failed to load " + filename + " include document", error);
+      for (File file : files) {
+        String filename = file.getName();
+        if (!filename.endsWith(".xml")) continue;
+
+        String id = filename.substring(0, filename.length() - ".xml".length());
+        // Already loaded, can ignore and continue
+        if (deletedIncludes.remove(id)) continue;
+
+        try {
+          this.includes.put(id, new MapIncludeImpl(id, file));
+        } catch (MapMissingException | JDOMException | IOException error) {
+          logger.log(Level.WARNING, "Failed to load " + filename + " include document", error);
+        }
       }
     }
 

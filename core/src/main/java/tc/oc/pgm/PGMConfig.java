@@ -38,7 +38,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import org.jspecify.annotations.Nullable;
 import tc.oc.pgm.api.Config;
 import tc.oc.pgm.api.PGM;
 import tc.oc.pgm.api.Permissions;
@@ -63,7 +62,7 @@ public final class PGMConfig implements Config {
   // map.*
   private final List<MapSourceFactory> mapSourceFactories;
   private final Path mapPoolFile;
-  private final Path includesDirectory;
+  private final List<Path> includeDirectories;
   private final boolean showUnusedXml;
   private final boolean enforceDevPhase;
 
@@ -174,7 +173,10 @@ public final class PGMConfig implements Config {
     }
 
     this.mapPoolFile = getPath(dataFolder.toPath(), config.getString("map.pools"));
-    this.includesDirectory = getPath(dataFolder.toPath(), config.getString("map.includes"));
+    List<String> includesList = config.getStringList("map.includes");
+    this.includeDirectories = includesList.stream()
+        .map(path -> getPath(dataFolder.toPath(), path))
+        .collect(Collectors.toList());
     this.showUnusedXml = parseBoolean(config.getString("map.show-unused-xml", "true"));
     this.enforceDevPhase = parseBoolean(config.getString("map.enforce-dev-phase", "false"));
 
@@ -499,8 +501,8 @@ public final class PGMConfig implements Config {
   }
 
   @Override
-  public @Nullable Path getIncludesDirectory() {
-    return includesDirectory;
+  public List<Path> getIncludeDirectories() {
+    return includeDirectories;
   }
 
   @Override

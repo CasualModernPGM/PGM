@@ -67,7 +67,7 @@ public interface Config {
    * @return A path to the includes directory, or null for none.
    */
   @Nullable
-  Path getIncludesDirectory();
+  List<Path> getIncludeDirectories();
 
   /** @return If unused XML tags should be reported or ignored */
   boolean showUnusedXml();
