@@ -502,4 +502,6 @@ public interface Config {
    * @return Whether command blocks are enabled in PGM-loaded worlds or not.
    */
   boolean allowCommandBlocks();
+
+  boolean isMatchTimeEnabled();
 }

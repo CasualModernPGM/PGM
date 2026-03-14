@@ -35,27 +35,25 @@ public class MatchFooterTabEntry extends DynamicTabEntry {
   public void addToView(TabView view) {
     super.addToView(view);
     if (this.tickTask == null && match.isLoaded()) {
-      Runnable tick =
-          new Runnable() {
-            private long length;
-            private boolean running;
+      Runnable tick = new Runnable() {
+        private long length;
+        private boolean running;
 
-            @Override
-            public void run() {
-              long lastLen = length;
-              boolean lastRunning = running;
-              length = match.getDuration().getSeconds();
-              running = match.isRunning();
+        @Override
+        public void run() {
+          long lastLen = length;
+          boolean lastRunning = running;
+          length = match.getDuration().getSeconds();
+          running = match.isRunning();
 
-              if (this.length != lastLen || this.running != lastRunning) {
-                MatchFooterTabEntry.this.invalidate();
-              }
-            }
-          };
-      this.tickTask =
-          match
-              .getExecutor(MatchScope.LOADED)
-              .scheduleWithFixedDelay(tick, 0, 50, TimeUnit.MILLISECONDS);
+          if (this.length != lastLen || this.running != lastRunning) {
+            MatchFooterTabEntry.this.invalidate();
+          }
+        }
+      };
+      this.tickTask = match
+          .getExecutor(MatchScope.LOADED)
+          .scheduleWithFixedDelay(tick, 0, 50, TimeUnit.MILLISECONDS);
     }
   }
 
@@ -88,22 +86,27 @@ public class MatchFooterTabEntry extends DynamicTabEntry {
     final Component rightContent = PGM.get().getConfiguration().getRightTablistText();
 
     if (!timeOnly && leftContent != null) {
-      content
-          .append(leftContent.colorIfAbsent(NamedTextColor.WHITE))
-          .append(text(" - ", NamedTextColor.DARK_GRAY));
+      content.append(leftContent.colorIfAbsent(NamedTextColor.WHITE));
     }
 
-    content
-        .append(translatable("match.info.time", NamedTextColor.GRAY))
-        .append(text(": ", NamedTextColor.GRAY))
-        .append(
-            clock(match.getDuration())
-                .color(this.match.isRunning() ? NamedTextColor.GREEN : NamedTextColor.GOLD));
+    if (PGM.get().getConfiguration().isMatchTimeEnabled()) {
+      if (!timeOnly && leftContent != null) {
+        content.append(text(" - ", NamedTextColor.DARK_GRAY));
+      }
+      content
+          .append(translatable("match.info.time", NamedTextColor.GRAY))
+          .append(text(": ", NamedTextColor.GRAY))
+          .append(clock(match.getDuration())
+              .color(this.match.isRunning() ? NamedTextColor.GREEN : NamedTextColor.GOLD));
+      if (!timeOnly && rightContent != null) {
+        content.append(text(" - ", NamedTextColor.DARK_GRAY));
+      }
+    } else if (!timeOnly && leftContent != null && rightContent != null) {
+      content.append(text(" - ", NamedTextColor.DARK_GRAY));
+    }
 
     if (!timeOnly && rightContent != null) {
-      content
-          .append(text(" - ", NamedTextColor.DARK_GRAY))
-          .append(rightContent.colorIfAbsent(NamedTextColor.WHITE));
+      content.append(rightContent.colorIfAbsent(NamedTextColor.WHITE));
     }
 
     return content.colorIfAbsent(NamedTextColor.DARK_GRAY).build();

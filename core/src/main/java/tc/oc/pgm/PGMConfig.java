@@ -117,6 +117,7 @@ public final class PGMConfig implements Config {
   // tablist.*
   private final Component rightTablistText;
   private final Component leftTablistText;
+  private final boolean matchTimeEnabled;
 
   // community.*
   private final boolean vanish;
@@ -237,6 +238,7 @@ public final class PGMConfig implements Config {
     final String rightText = config.getString("tablist.right");
     this.rightTablistText =
         rightText == null || rightText.isEmpty() ? null : parseComponent(rightText);
+    this.matchTimeEnabled = config.getBoolean("tablist.show-match-time", true);
 
     this.vanish = parseBoolean(config.getString("vanish", "true"));
 
@@ -623,6 +625,11 @@ public final class PGMConfig implements Config {
   @Override
   public Component getRightTablistText() {
     return rightTablistText;
+  }
+
+  @Override
+  public boolean isMatchTimeEnabled() {
+    return matchTimeEnabled;
   }
 
   @Override

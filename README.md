@@ -144,9 +144,19 @@ You can choose to have a single color for your FFA match participants, as well a
 <players color="red">README readers</players>
 ```
 
+## Multiple include folders
+
+```yml
+  # Paths to include folders, or empty to disable map includes.
+  includes:
+    - "includes"
+    - "more_includes"
+```
+
 ## Other
 - Avoid sending "Playing \<map> by \<author>" when no players are on.
 - Allow spawning command-summoned mobs by default (spawn cause is different in 1.13+).
 - Adds modern event filtering. Currently used to disable underwater forced dismounts when riding entities.
-- Allows setting arrays in `/variable set`. Usage: `/variable set variable[index] 1`
-- Track when a player kills another via an End Crystal explosion
+- Allows setting arrays in `/variable set`. Usage: `/variable set variable[index] 1`.
+- Track when a player kills another via an End Crystal explosion.
+- `show-match-time` config setting.

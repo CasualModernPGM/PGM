@@ -32,7 +32,7 @@ map:
   # A path to a map pools file, empty or commented-out to disable pools.
   # pools: "map-pools.yml"
   
-  # A path to the includes folder, or empty to disable map includes.
+  # Paths to include folders, or empty to disable map includes.
   includes:
     - "includes"
 
@@ -128,6 +128,7 @@ sidebar:
 tablist:
   left: ""
   right: ""
+  show-match-time: true
 
 # Overrides the server MoTD.
 #

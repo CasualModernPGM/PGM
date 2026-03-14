@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.CommandDescription;
 import org.jspecify.annotations.Nullable;
+import tc.oc.pgm.api.PGM;
 import tc.oc.pgm.api.integration.Integration;
 import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.match.MatchPhase;
@@ -57,8 +58,7 @@ public final class MatchCommand {
         NamedTextColor.WHITE,
         TextFormatter.MAX_CHAT_WIDTH));
 
-    if (haveGameInfo) {
-      // show match time
+    if (haveGameInfo && PGM.get().getConfiguration().isMatchTimeEnabled()) {
       viewer.sendMessage(translatable("match.info.time", NamedTextColor.DARK_PURPLE)
           .append(text(": ", NamedTextColor.DARK_PURPLE))
           .append(clock(match.getDuration()).color(NamedTextColor.GOLD)));
