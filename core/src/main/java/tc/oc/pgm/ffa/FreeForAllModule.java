@@ -9,6 +9,7 @@ import org.bukkit.scoreboard.NameTagVisibility;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import tc.oc.pgm.api.PGM;
+import tc.oc.pgm.api.filter.Filter;
 import tc.oc.pgm.api.map.Gamemode;
 import tc.oc.pgm.api.map.MapModule;
 import tc.oc.pgm.api.map.MapTag;
@@ -62,6 +63,7 @@ public class FreeForAllModule implements MapModule<FreeForAllMatchModule> {
     public FreeForAllModule parse(MapFactory factory, Logger logger, Document doc)
         throws InvalidXMLException {
       Element elPlayers = doc.getRootElement().getChild("players");
+      var parser = factory.getParser();
 
       if (factory.hasModule(TeamModule.class)) {
         if (elPlayers != null)
@@ -71,7 +73,8 @@ public class FreeForAllModule implements MapModule<FreeForAllMatchModule> {
         int minPlayers = (int) PGM.get().getConfiguration().getMinimumPlayers();
         int maxPlayers = Bukkit.getMaxPlayers();
         int maxOverfill = maxPlayers;
-        NameTagVisibility nameTagVisibility = NameTagVisibility.ALWAYS;
+        NameTagVisibility nameTagVisibility = null;
+        Filter nameTagVisibilityFilter = null;
         boolean colors = false;
         ChatColor singleColor = null;
         String customName = null;
@@ -85,6 +88,8 @@ public class FreeForAllModule implements MapModule<FreeForAllMatchModule> {
               elPlayers.getAttribute("max-overfill"), Integer.class, maxOverfill);
           nameTagVisibility = XMLUtils.parseNameTagVisibility(
               Node.fromAttr(elPlayers, "show-name-tags"), nameTagVisibility);
+          nameTagVisibilityFilter =
+              parser.filter(elPlayers, "name-tags-filter").dynamic(Match.class).orNull();
           colors = XMLUtils.parseBoolean(Node.fromAttr(elPlayers, "colors"), colors);
 
           String colorAttr = elPlayers.getAttributeValue("color");
@@ -104,6 +109,13 @@ public class FreeForAllModule implements MapModule<FreeForAllMatchModule> {
           if (text != null && !text.isEmpty()) customName = text;
         }
 
+        if (nameTagVisibility != null && nameTagVisibilityFilter != null) {
+          throw new InvalidXMLException(
+              "Attribute 'show-name-tags' cannot be combined with 'name-tags-filter'", elPlayers);
+        }
+
+        if (nameTagVisibility == null) nameTagVisibility = NameTagVisibility.ALWAYS;
+
         return new FreeForAllModule(new FreeForAllOptions(
             minPlayers,
             maxPlayers,
@@ -111,7 +123,9 @@ public class FreeForAllModule implements MapModule<FreeForAllMatchModule> {
             nameTagVisibility,
             colors,
             singleColor,
-            customName));
+            customName,
+            nameTagVisibilityFilter,
+            colors));
       }
     }
   }
