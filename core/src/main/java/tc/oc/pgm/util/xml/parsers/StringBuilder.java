@@ -20,7 +20,8 @@ public class StringBuilder extends PrimitiveBuilder<String, StringBuilder> {
 
   @Override
   protected String parse(String text) throws TextException {
-    return colored ? BukkitUtils.colorize(text) : BukkitUtils.uncolorize(text);
+    if (colored) text = BukkitUtils.colorize(text);
+    return text;
   }
 
   public StringBuilder validate(Pattern pattern) {
