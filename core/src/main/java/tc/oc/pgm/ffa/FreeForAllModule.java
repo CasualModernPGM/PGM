@@ -124,8 +124,7 @@ public class FreeForAllModule implements MapModule<FreeForAllMatchModule> {
             colors,
             singleColor,
             customName,
-            nameTagVisibilityFilter,
-            colors));
+            nameTagVisibilityFilter));
       }
     }
   }

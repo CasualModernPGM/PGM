@@ -10,10 +10,10 @@ public class FreeForAllOptions {
   public final int maxPlayers;
   public final int maxOverfill;
   public final NameTagVisibility nameTagVisibility;
-  public final Filter nameTagVisibilityFilter;
   public final boolean colors;
   public final @Nullable ChatColor singleColor;
   public final @Nullable String customName;
+  public final Filter nameTagVisibilityFilter;
 
   public FreeForAllOptions(
       int minPlayers,
@@ -23,8 +23,7 @@ public class FreeForAllOptions {
       boolean colors,
       @Nullable ChatColor singleColor,
       @Nullable String customName,
-      Filter nameTagVisibilityFilter,
-      boolean colors) {
+      Filter nameTagVisibilityFilter) {
 
     this.minPlayers = minPlayers;
     this.maxPlayers = maxPlayers;
