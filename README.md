@@ -1,6 +1,6 @@
-PGM (CMP fork)
+PGM (CMP fork/CMPGM)
 ===
-This fork's changes for our private server:
+This fork's changes:
  
 ## `execute` action
 Use any command you want. Supports `<replacements/>`.
@@ -161,3 +161,5 @@ You can choose to have a single color for your FFA match participants, as well a
 - Track when a player kills another via an End Crystal explosion.
 - `show-match-time` config setting.
 - Show match duration at the end of match stats display.
+- `-hidePlayers` flag in `/variables`. ([@eliminate123](https://github.com/eliminate123))
+- Undoes the uncolorization step for monument names.
